@@ -12,19 +12,24 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-app = dash.Dash(__name__,
-                external_stylesheets=[dbc.themes.LUX])
+app = dash.Dash(__name__,external_stylesheets=[dbc.themes.LUX])
+server = app.server
 
-app.title = "Heat Wave and Air Index Prediction"
-data22 = pd.read_csv('weather_data_2022.csv')
-list_of_districts = set(data22['District'])
-list_of_districts = [{'label': i, 'value': i} for i in list_of_districts]
-list_of_districts = ['Adilabad', 'Karimnagar',
-                     'Khammam', 'Nizamadad', 'Warangal']
+app.title = "Heat Wave and Air Quality Index Prediction"
+# data22 = pd.read_csv('weather_data_2022.csv')
+# list_of_districts = set(data22['District'])
+# list_of_districts = [{'label': i, 'value': i} for i in list_of_districts]
+# list_of_districts = ['Adilabad', 'Karimnagar',
+#                      'Khammam', 'Nizamadad', 'Warangal']
 pred_heat_wave = pd.read_csv("Heat Wave.csv")
+pred_aqi_values = pd.read_csv("AQI_pred_23.csv")
+
+# pred_heat_wave = pd.read_csv("../Heat Wave.csv")
+# pred_aqi_values = pd.read_csv("../AQI_pred_23.csv")
+# pred_aqi_values['Date'] = pd.to_datetime(pred_aqi_values['Date'])
 
 
-def pred_plot(dataframe,value):
+def pred_plot(dataframe, value):
     upper_bound = go.Scatter(
         name='Upper Bound',
         x=dataframe['Date'],
@@ -148,6 +153,91 @@ warangal_card = dbc.Card(
            "width": "18rem", "margin": "5px"},
 )
 
+adilabad_card_aqi = dbc.Card(
+    [
+        dbc.CardImg(src=r"/static/Photo/Adilabad.png", top=True,
+                    style={"width": "150px", "height": "150px", 'margin': '20px 55px 0px 55px'}),
+        dbc.CardBody(
+            [
+                html.H4("Adilabad", className="card-title"),
+                html.Div("Air Quality Index  : ",
+                         id="adilabad_aqi",
+                         ),
+            ],
+        ),
+    ],
+    style={"font-family": "Garamond, serif",
+           "width": "18rem", "margin": "5px"},
+)
+
+karimnagar_card_aqi = dbc.Card(
+    [
+        dbc.CardImg(src=r"/static/Photo/Karimnagar.png", top=True,
+                    style={"width": "150px", "height": "150px", 'margin': '20px 55px 0px 55px'}),
+        dbc.CardBody(
+            [
+                html.H4("Karimnagar", className="card-title"),
+                html.Div("Air Quality Index  : ",
+                         id="karimnagar_aqi",
+                         ),
+            ]
+        ),
+    ],
+    style={"font-family": "Garamond, serif",
+           "width": "18rem", "margin": "5px"},
+)
+
+khammam_card_aqi = dbc.Card(
+    [
+        dbc.CardImg(src=r"/static/Photo/Khammam.png", top=True,
+                    style={"width": "150px", "height": "150px", 'margin': '20px 55px 0px 55px'}),
+        dbc.CardBody(
+            [
+                html.H4("Khammam", className="card-title"),
+                html.Div("Air Quality Index  : ",
+                         id="khammam_aqi",
+                         ),
+            ]
+        ),
+    ],
+    style={"font-family": "Garamond, serif",
+           "width": "18rem", "margin": "5px"},
+)
+
+nizamabad_card_aqi = dbc.Card(
+    [
+        dbc.CardImg(src=r"/static/Photo/Nizamabad.png", top=True,
+                    style={"width": "150px", "height": "150px", 'margin': '20px 55px 0px 55px'}),
+        dbc.CardBody(
+            [
+                html.H4("Nizamabad", className="card-title"),
+                html.Div("Air Quality Index : ",
+                         id="nizamabad_aqi",
+                         ),
+            ]
+        ),
+    ],
+    style={"font-family": "Garamond, serif",
+           "width": "18rem", "margin": "5px"},
+)
+
+warangal_card_aqi = dbc.Card(
+    [
+        dbc.CardImg(src=r"/static/Photo/Warangal.png", top=True,
+                    style={"width": "150px", "height": "150px", 'margin': '20px 55px 0px 55px'}),
+        dbc.CardBody(
+            [
+                html.H4("Warangal", className="card-title"),
+                html.Div("Air Quality Index : ",
+                         id="warangal_aqi",
+                         ),
+            ]
+        ),
+    ],
+    style={"font-family": "Garamond, serif",
+           "width": "18rem", "margin": "5px"},
+)
+
 
 def func(dist):
     geo_data = gpd.read_file(
@@ -185,7 +275,7 @@ app.layout = html.Div(
     children=[
         html.Div(children=[
             html.Img(src="static/nasscom.png",
-                    style={"display": "block", "margin-left": "auto", "margin-right": "auto", "padding": "50px"}),
+                     style={"display": "block", "margin-left": "auto", "margin-right": "auto", "padding": "50px"}),
             html.H1("TELANGANA ACADEMIC GRAND CHALLENGE ON CLIMATE CHANGE",
                     style={"font-family": "Garamond, serif", "text-align": "center"}),
             html.Br(),
@@ -193,15 +283,15 @@ app.layout = html.Div(
                     style={"font-family": "Garamond, serif", "text-align": "center"}),
             html.Ul(
                 children=[html.Li("Manav Karthikeyan"),
-                        html.Li("Surya Narayan K"),
-                        html.Li("Prathosh V"),
-                        html.Li("RahulRam P")],
+                          html.Li("Surya Narayan K"),
+                          html.Li("Prathosh V"),
+                          html.Li("RahulRam P")],
                 style={"font-family": "Garamond, serif", "font-size": "20px",
-                    "text-align": "center", "list-style-type": "none", "padding": "8px"}
+                       "text-align": "center", "list-style-type": "none", "padding": "8px"}
             )
         ]),
         html.Div([
-            html.H3("Predicted Heat wave values for the year 2023"),
+            html.H3("Predicted Heat wave values for the year 2022-2023"),
             html.Div([
                 dcc.DatePickerSingle(
                     id='date-heat',
@@ -214,16 +304,16 @@ app.layout = html.Div(
             ),
             html.Br(),
             html.Div([
-                              
+
                 adilabad_card,
                 karimnagar_card,
                 khammam_card,
                 nizamabad_card,
                 warangal_card,
             ],
-                style={"display": "flex", 'padding': "10px"},
+                style={"display": "flex"},
             ),
-            
+
         ],
             style={
             "margin": "200px", "padding": "20px"
@@ -248,11 +338,40 @@ app.layout = html.Div(
         #         "margin": "200px", "padding": "20px"
         #     }
         # ),
+        html.Div([
+            html.H3("Predicted AQI values for the year 2023"),
+            html.Div([
+                dcc.DatePickerSingle(
+                    id='date-aqi',
+                    display_format='MMMM',
+                    initial_visible_month=date(2023, 1, 1),
+                    min_date_allowed=date(2023, 1, 1),
+                    max_date_allowed=date(2023, 12, 1),
+                    date=date(2023, 1, 1),
+                )]
+            ),
+            html.Br(),
+            html.Div([
+
+                adilabad_card_aqi,
+                karimnagar_card_aqi,
+                khammam_card_aqi,
+                nizamabad_card_aqi,
+                warangal_card_aqi,
+            ],
+                style={"display": "flex"},
+            ),
+
+        ],
+            style={
+            "margin": "200px", "padding": "20px"
+        }),
 
         html.Div(
             children=[
                 html.H3("Predicted Heat wave values for the year 2023"),
                 html.H6('Red region denotes the occurence of heatwave'),
+                html.Br(),
                 dcc.Dropdown(
                     id="drop",
                     options=[
@@ -266,15 +385,18 @@ app.layout = html.Div(
                     placeholder="Select a city",
                     style={"margin-right": "100px", "height": "45px"}
                 ),
-
+                html.Br(),
+                html.H6('Pick Date Range'),
                 dcc.DatePickerRange(
                     id='date_range',
-                    initial_visible_month=date(2022, 9,30),
+                    initial_visible_month=date(2022, 9, 30),
                     min_date_allowed=date(2022, 9, 30),
                     max_date_allowed=date(2023, 9, 24),
                     start_date=date(2022, 9, 30),
-                    end_date=date(2023, 9, 24),
+                    end_date=date(2023, 9, 24)
                 ),
+                html.Br(),
+                html.Br(),
                 dcc.Graph(
                     id="graph_temp",
                 )
@@ -284,7 +406,7 @@ app.layout = html.Div(
                 "margin": "200px", "padding": "20px"
             }
         )
-        
+
     ]
 
 )
@@ -292,11 +414,11 @@ app.layout = html.Div(
 
 @app.callback(
     Output(component_id="adilabad_temp", component_property="children"),
-     Output(component_id="karimnagar_temp", component_property="children"),
-     Output(component_id="khammam_temp", component_property="children"),
-     Output(component_id="nizamabad_temp", component_property="children"),
-     Output(component_id="warangal_temp", component_property="children"),
-     Input(component_id='date-heat', component_property='date')
+    Output(component_id="karimnagar_temp", component_property="children"),
+    Output(component_id="khammam_temp", component_property="children"),
+    Output(component_id="nizamabad_temp", component_property="children"),
+    Output(component_id="warangal_temp", component_property="children"),
+    Input(component_id='date-heat', component_property='date')
 )
 def update_temp(date):
 
@@ -312,13 +434,45 @@ def update_temp(date):
 
     dff = pred_heat_wave.copy()
     dff = dff.set_index("Date")
-    adilabad = out + str(dff.loc[date]["Adilabad_Temp"])
-    karimnagar = out + str(dff.loc[date]["Karimnagar_Temp"])
-    khammam = out + str(dff.loc[date]["Khammam_Temp"])
-    nizamabad = out + str(dff.loc[date]["Nizamabad_Temp"])
-    warangal = out + str(dff.loc[date]["Warangal_Temp"])
-    
+    adilabad = out + str(round(dff.loc[date]["Adilabad_Temp"],2))
+    karimnagar = out + str(round(dff.loc[date]["Karimnagar_Temp"],2))
+    khammam = out + str(round(dff.loc[date]["Khammam_Temp"],2))
+    nizamabad = out + str(round(dff.loc[date]["Nizamabad_Temp"],2))
+    warangal = out + str(round(dff.loc[date]["Warangal_Temp"],2))
+
     return adilabad, karimnagar, khammam, nizamabad, warangal
+
+
+@app.callback(
+    Output(component_id="adilabad_aqi", component_property="children"),
+    Output(component_id="karimnagar_aqi", component_property="children"),
+    Output(component_id="khammam_aqi", component_property="children"),
+    Output(component_id="nizamabad_aqi", component_property="children"),
+    Output(component_id="warangal_aqi", component_property="children"),
+    Input(component_id='date-aqi', component_property='date')
+)
+def update_aqi(date):
+
+    out = "Air Quality Index : "
+
+    if(date == None):
+        return out, out, out, out, out
+
+    # yyyy-mm-dd ==> dd-mm-yyyy
+    year, month, date = date.split("-")
+    month = int(month)
+
+    data = pred_aqi_values.copy()
+    data = data.set_index("month")
+
+    adilabad = out + str(round(data.loc[month]["Adilabad_predicted_mean"],2))
+    karimnagar = out + str(round(data.loc[month]["Karimnagar_predicted_mean"],2))
+    khammam = out + str(round(data.loc[month]["Khammam_predicted_mean"],2))
+    nizamabad = out + str(round(data.loc[month]["Nizamabad_predicted_mean"],2))
+    warangal = out + str(round(data.loc[month]["Warangal_predicted_mean"],2))
+
+    return adilabad, karimnagar, khammam, nizamabad, warangal
+
 
 @app.callback(
     Output(component_id="graph_temp",
@@ -348,9 +502,9 @@ def update_graph(value, start, end):
     end = dff[dff["Date"] == end].index[0]
 
     dff = dff.iloc[start:end+1]
-    
-    fig = pred_plot(dff,value)
-    dff_heatwave = dff[dff[value+"_HeatWave"]==1]
+
+    fig = pred_plot(dff, value)
+    dff_heatwave = dff[dff[value+"_HeatWave"] == 1]
     for i in dff_heatwave["Date"].values:
         fig.add_vline(x=i,
                       line_width=2, opacity=0.25, line_color="red")
