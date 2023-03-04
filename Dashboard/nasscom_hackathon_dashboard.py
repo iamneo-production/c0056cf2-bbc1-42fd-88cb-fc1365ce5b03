@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore")
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.LUX])
 server = app.server
 
-app.title = "Heat Wave and Air Quality Index Prediction"
+app.title = "Heat Wave and Air Index Prediction"
 # data22 = pd.read_csv('weather_data_2022.csv')
 # list_of_districts = set(data22['District'])
 # list_of_districts = [{'label': i, 'value': i} for i in list_of_districts]
@@ -316,7 +316,7 @@ app.layout = html.Div(
 
         ],
             style={
-            "margin": "200px", "padding": "20px"
+            "margin": "200px", "padding": "20px", "border-style": "double"
         }),
         # html.Div(
         #     children=[
@@ -340,6 +340,14 @@ app.layout = html.Div(
         # ),
         html.Div([
             html.H3("Predicted AQI values for the year 2023"),
+            html.Ul(
+                children=[html.Li("AIR QUALITY STANDARDS"),
+                          html.Li("0-50    :   Good"),
+                          html.Li("51-100  :  Satisfactory"),
+                          html.Li(">100    :  Moderate - Poor")],
+                style={"font-family": "Garamond, serif", "font-size": "20px",
+                       "text-align": "center", "list-style-type": "none","width":"600px", "padding": "8px", "border-style": "solid"}
+            ),
             html.Div([
                 dcc.DatePickerSingle(
                     id='date-aqi',
@@ -364,7 +372,7 @@ app.layout = html.Div(
 
         ],
             style={
-            "margin": "200px", "padding": "20px"
+            "margin": "200px", "padding": "20px", "border-style": "double"
         }),
 
         html.Div(
@@ -403,7 +411,7 @@ app.layout = html.Div(
             ],
 
             style={
-                "margin": "200px", "padding": "20px"
+                "margin": "200px", "padding": "20px", "border-style": "double"
             }
         )
 
